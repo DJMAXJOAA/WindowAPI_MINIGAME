@@ -13,3 +13,13 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <ctime>
+#include <cstdlib>
+#include <random>
+#include <math.h>
+#include <commdlg.h>
+#include <stdio.h>
