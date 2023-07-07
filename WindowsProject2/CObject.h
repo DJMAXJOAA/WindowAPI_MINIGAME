@@ -3,12 +3,7 @@
 
 enum Type
 {
-	BLOCK, CANNONBALL, OBSTACLE, CANNON
-};
-
-enum POINTXY
-{
-	X, Y
+	BLOCK, CANNONBALL, OBSTACLE
 };
 
 class CObject
@@ -21,11 +16,13 @@ public:
 	POINT getPoint();
 	bool isitCollide(CObject &x);
 	void setCollide(bool TF);
-	virtual void Update(HDC hdc) = 0;
+	virtual void Update() = 0;
+	virtual void Draw(HDC hdc) = 0;
 
 protected:
 	POINT point;
 	int type;
 	bool collide;
 	int length;
+	int index;
 };

@@ -1,22 +1,25 @@
 #pragma once
 #include "CObject.h"
 
-class Cannon : public CObject
+class Cannon
 {
 public:
-	Cannon() : CObject(rectView.right / 2, rectView.bottom, CANNON, LENGTH)
-	{
-		angle = 0;
-		attack_cycle = 2;
-		can_attack = true;
-	}
+	Cannon();
 	~Cannon();
-	void Update(HDC hdc) override;
+	void Update(POINT cur_point);
+	void Draw(HDC hdc);
 	bool CanItAttack();
 	void setAttack();
+	float getUnitVector(int XY);
+	POINT getAttackPos();
 
 private:
+	POINT point;
+	POINT vertex[4];
+	float directionX;
+	float directionY;
 	float angle;
+	int length;
 	float attack_cycle;
 	bool can_attack;
 };

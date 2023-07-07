@@ -1,7 +1,7 @@
 #include "CObject.h"
 #include "Math.h"
 
-Math calculate;
+Math cal_b;
 
 CObject::CObject(int x, int y, int type, int length)
 {
@@ -9,6 +9,7 @@ CObject::CObject(int x, int y, int type, int length)
 	point.y = y;
 	this->length = length;
 	this->type = type;
+	index = 0;
 	collide = false;
 }
 

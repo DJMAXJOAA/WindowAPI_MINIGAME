@@ -20,6 +20,8 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름�
 
 RECT rectView;
 SSystem manager;
+Math calculator;
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -107,8 +109,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUPWINDOW,
+      1200, 300, WIDTH, HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -137,22 +139,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     HDC hdc;
     PAINTSTRUCT ps;
 
-    SSystem ssystem;
+    static POINT cur_point;
+    
+    TCHAR info1[100]; // 마우스 위치
 
     switch (message)
     {
     case WM_CREATE:
     {
+        cur_point.x = 0;
+        cur_point.y = 0;
+
         GetClientRect(hWnd, &rectView);
         SetTimer(hWnd, timer_1, 30, NULL);
-
-        manager.ObjectNew(CANNON);
 
         break;
     }
     case WM_TIMER:
     {
+        manager.cannon->Update(cur_point);
+
         InvalidateRgn(hWnd, NULL, FALSE);
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        cur_point.x = LOWORD(lParam);
+        cur_point.y = HIWORD(lParam);
+        manager.ObjectNew(CANNONBALL);
+        
+        InvalidateRgn(hWnd, NULL, FALSE);
+
+        break;
+    }
+    case WM_MOUSEMOVE:
+    {
+        cur_point.x = LOWORD(lParam);
+        cur_point.y = HIWORD(lParam);
+
+        wsprintf(info1, TEXT("%d , %d"), cur_point.x, cur_point.y);
+        hdc = GetDC(hWnd);
+        TextOut(hdc, 0, 0, info1, _tcslen(info1));
+        ReleaseDC(hWnd, hdc);
 
         break;
     }
@@ -187,12 +215,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
 
 
-
+        
         for (int i = 0; i < manager.list.size(); i++)
         {
-            manager.list[i]->Update(MemDC2);
+            manager.list[i]->Draw(MemDC2);
         }
-
+        manager.cannon->Draw(MemDC2);
 
 
         // 여기까지 ~~

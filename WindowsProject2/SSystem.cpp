@@ -2,6 +2,7 @@
 
 SSystem::SSystem()
 {
+	cannon = new Cannon();
 	list.clear();
 	score = 0;
 }
@@ -12,20 +13,9 @@ SSystem::~SSystem()
 	{
 		delete list[i];
 	}
+	delete cannon;
 }
 
-void SSystem::ScreenInit(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
-{
-	
-}
-
-void SSystem::ScreenPaint(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
-{
-}
-
-void SSystem::ScreenRelease(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
-{
-}
 
 void SSystem::ObjectNew(int type)
 {
@@ -42,8 +32,6 @@ void SSystem::ObjectNew(int type)
 	case OBSTACLE:
 		temp = new Obstacle();
 		break;
-	case CANNON:
-		temp = new Cannon();
 	}
 
 	list.push_back(temp);
