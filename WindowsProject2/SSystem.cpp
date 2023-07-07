@@ -2,22 +2,16 @@
 
 SSystem::SSystem()
 {
-	cannon = new Cannon();
 	list.clear();
 	score = 0;
 }
 
 SSystem::~SSystem()
 {
-	for (int i = 0; i < list.size(); i++)
-	{
-		delete list[i];
-	}
-	delete cannon;
+	
 }
 
-
-void SSystem::ObjectNew(int type)
+void SSystem::ObjectNew(int type, SSystem &manager)
 {
 	CObject* temp;
 
@@ -27,7 +21,7 @@ void SSystem::ObjectNew(int type)
 		temp = new Block();
 		break;
 	case CANNONBALL:
-		temp = new Cannonball();
+		temp = new Cannonball(manager);
 		break;
 	case OBSTACLE:
 		temp = new Obstacle();

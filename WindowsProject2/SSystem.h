@@ -1,6 +1,6 @@
 #pragma once
-#include "ChildGObject.h"
 #include "Cannon.h"
+#include "ChildGObject.h"
 
 class SSystem
 {
@@ -10,7 +10,7 @@ public:
 
 	SSystem();
 	~SSystem();
-	void ObjectNew(int type);
+	void ObjectNew(int type, SSystem &manager);
 	void ObjectDelete(int index);
 
 private:

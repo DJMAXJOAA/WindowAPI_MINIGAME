@@ -150,6 +150,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         cur_point.x = 0;
         cur_point.y = 0;
 
+        manager.cannon = new Cannon();
         GetClientRect(hWnd, &rectView);
         SetTimer(hWnd, timer_1, 30, NULL);
 
@@ -157,6 +158,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_TIMER:
     {
+        for (int i = 0; i < manager.list.size(); i++)
+        {
+            manager.list[i]->Update(rectView);
+        }
         manager.cannon->Update(cur_point);
 
         InvalidateRgn(hWnd, NULL, FALSE);
@@ -166,7 +171,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         cur_point.x = LOWORD(lParam);
         cur_point.y = HIWORD(lParam);
-        manager.ObjectNew(CANNONBALL);
+        manager.ObjectNew(CANNONBALL, manager);
         
         InvalidateRgn(hWnd, NULL, FALSE);
 
@@ -215,7 +220,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
 
 
-        
         for (int i = 0; i < manager.list.size(); i++)
         {
             manager.list[i]->Draw(MemDC2);
@@ -234,6 +238,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     case WM_DESTROY:
+        delete manager.cannon;
+        for (int i = 0; i < manager.list.size(); i++)
+        {
+            delete manager.list[i];
+        }
+        KillTimer(hWnd, timer_1);
         PostQuitMessage(0);
         break;
     default:

@@ -1,6 +1,5 @@
 #pragma once
 #include "CObject.h"
-#include "SSystem.h"
 
 /* 블럭 */
 /* 블럭 */
@@ -12,7 +11,7 @@ public:
 		dead = false;
 	};
 	~Block();
-	virtual void Update();
+	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
 
 private:
@@ -28,7 +27,7 @@ class Cannonball : public CObject
 public:
 	Cannonball(SSystem manager);
 	~Cannonball();
-	virtual void Update(RECT rectView, SSystem manager);
+	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
 
 private:
@@ -49,7 +48,7 @@ public:
 	};
 	~Obstacle();
 	int RandomPt();
-	virtual void Update();
+	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
 
 private:

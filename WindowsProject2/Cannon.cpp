@@ -73,8 +73,8 @@ POINT Cannon::getAttackPos()
 	float angle2 = angle * ANGLE_TO_RAD;
 	POINT temp;
 
-	temp.x = point.x + (1 * cosf(angle2) - 1 * sinf(angle2));
-	temp.y = point.y + (1 * sinf(angle2) + 1 * cosf(angle2));
+	temp.x = point.x + (vertex[0].x * cosf(angle2) - 1 * sinf(angle2));
+	temp.y = point.y + (vertex[0].x * sinf(angle2) + 1 * cosf(angle2));
 	
 	return temp;
 }

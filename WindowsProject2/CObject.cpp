@@ -1,5 +1,6 @@
 #include "CObject.h"
 #include "Math.h"
+#include "SSystem.h"
 
 Math cal_b;
 
