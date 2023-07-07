@@ -19,6 +19,10 @@ void SSystem::ScreenInit(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
 	
 }
 
+void SSystem::ScreenPaint(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
+{
+}
+
 void SSystem::ScreenRelease(HWND hWnd, HDC hdc, RECT rect, HDC MemDC)
 {
 }

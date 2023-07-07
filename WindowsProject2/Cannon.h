@@ -4,7 +4,7 @@
 class Cannon : public CObject
 {
 public:
-	Cannon() : CObject(400, 0, CANNON, LENGTH)
+	Cannon() : CObject(rectView.right / 2, rectView.bottom, CANNON, LENGTH)
 	{
 		angle = 0;
 		attack_cycle = 2;

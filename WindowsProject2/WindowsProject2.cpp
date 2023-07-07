@@ -144,7 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_CREATE:
     {
         GetClientRect(hWnd, &rectView);
-        SetTimer(hWnd, timer_1, 20, NULL);
+        SetTimer(hWnd, timer_1, 30, NULL);
 
         manager.ObjectNew(CANNON);
 
@@ -152,7 +152,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     case WM_TIMER:
     {
-        InvalidateRgn(hWnd, NULL, TRUE);
+        InvalidateRgn(hWnd, NULL, FALSE);
 
         break;
     }
@@ -178,16 +178,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        
+        GetClientRect(hWnd, &rectView);
+        HDC MemDC1 = GetDC(hWnd);
+        HDC MemDC2 = CreateCompatibleDC(MemDC1);
+        HBITMAP BackBit1 = CreateCompatibleBitmap(MemDC1, rectView.right, rectView.bottom);
+        HBITMAP BackBit2 = (HBITMAP)SelectObject(MemDC2, BackBit1);
+        FillRect(MemDC2, &rectView, (HBRUSH)GetSysColor(COLOR_BACKGROUND));
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-        
+
+
+
         for (int i = 0; i < manager.list.size(); i++)
         {
-            manager.list[i]->Update(hdc);
+            manager.list[i]->Update(MemDC2);
         }
 
+
+
         // 여기까지 ~~
-        
+        BitBlt(MemDC1, 0, 0, rectView.right, rectView.bottom, MemDC2, 0, 0, SRCCOPY);
+        SelectObject(MemDC2, BackBit2);
+        DeleteDC(MemDC2);
+        DeleteObject(BackBit1);
+        ReleaseDC(hWnd, hdc);
 
         EndPaint(hWnd, &ps);
         break;

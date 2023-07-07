@@ -6,7 +6,7 @@ Cannon::~Cannon()
 
 void Cannon::Update(HDC hdc)
 {
-	Ellipse(hdc, 0, 0, 40, 40);
+	Rectangle(hdc, point.x - length, point.y - length, point.x+length, point.y+length);
 }
 
 bool Cannon::CanItAttack()

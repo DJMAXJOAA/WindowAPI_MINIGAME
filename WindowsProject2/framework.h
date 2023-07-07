@@ -24,6 +24,7 @@
 #include <commdlg.h>
 #include <stdio.h>
 
-#define LENGTH 20
+#define LENGTH 100
 #define PI 3.1415
 #define RAD_TO_ANGLE 180.0/PI;
+
