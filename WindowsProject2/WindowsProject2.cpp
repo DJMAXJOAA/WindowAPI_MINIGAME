@@ -178,7 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
 
-        manager.ScreenStart(hWnd, hdc, rectView);
+        
         // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
         
         for (int i = 0; i < manager.list.size(); i++)
@@ -187,7 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
 
         // 여기까지 ~~
-        manager.ScreenEnd(hWnd, hdc, rectView);
+        
 
         EndPaint(hWnd, &ps);
         break;

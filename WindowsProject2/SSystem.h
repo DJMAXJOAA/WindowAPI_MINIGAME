@@ -9,7 +9,8 @@ public:
 
 	SSystem();
 	~SSystem();
-	int ListSize();
+	void ScreenInit(HWND hWnd, HDC hdc, RECT rect, HDC MemDC);
+	void ScreenRelease(HWND hWnd, HDC hdc, RECT rect, HDC MemDC);
 	void ObjectNew(int type);
 	void ObjectDelete(int index);
 
