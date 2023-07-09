@@ -1,8 +1,6 @@
 #pragma once
 #include "framework.h"
 
-class SSystem;
-
 enum Type
 {
 	BLOCK, CANNONBALL, OBSTACLE
@@ -16,8 +14,10 @@ public:
 
 	int getXY(int XY);
 	POINT getPoint();
-	bool isitCollide(CObject &x);
+	bool getCollide(CObject& x);
+	bool getActive();
 	void setCollide(bool TF);
+	void setDeactive();
 	virtual void Update(RECT rectView) = 0;
 	virtual void Draw(HDC hdc) = 0;
 
@@ -27,4 +27,5 @@ protected:
 	bool collide;
 	int length;
 	int index;
+	bool active;
 };

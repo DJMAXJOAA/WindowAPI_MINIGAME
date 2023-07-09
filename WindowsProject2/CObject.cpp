@@ -2,8 +2,6 @@
 #include "Math.h"
 #include "SSystem.h"
 
-Math cal_b;
-
 CObject::CObject(int x, int y, int type, int length)
 {
 	point.x = x;
@@ -12,6 +10,7 @@ CObject::CObject(int x, int y, int type, int length)
 	this->type = type;
 	index = 0;
 	collide = false;
+	active = true;
 }
 
 CObject::~CObject()
@@ -31,9 +30,14 @@ POINT CObject::getPoint()
 	return point;
 }
 
-bool CObject::isitCollide(CObject &x)
+bool CObject::getCollide(CObject& x)
 {
 	return false;
+}
+
+bool CObject::getActive()
+{
+	return active;
 }
 
 void CObject::setCollide(bool TF)
@@ -44,3 +48,7 @@ void CObject::setCollide(bool TF)
 		collide = false;
 }
 
+void CObject::setDeactive()
+{
+	active = false;
+}

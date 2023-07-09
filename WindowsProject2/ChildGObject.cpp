@@ -13,13 +13,15 @@ void Block::Draw(HDC hdc)
 {
 }
 
-Cannonball::Cannonball(SSystem manager)
-	: CObject(0, 0, CANNONBALL, LENGTH/4)
+Cannonball::Cannonball()
+	: CObject(0, 0, CANNONBALL, LENGTH / 4)
 {
+	SystemManager& manager = SystemManager::getInstance();
+
 	speed = 25;
-	point = manager.cannon->getAttackPos();
-	directionX = manager.cannon->getUnitVector(X) * -1;
-	directionY = manager.cannon->getUnitVector(Y) * -1;
+	point = manager.getCannon()->getAttackPos();
+	directionX = manager.getCannon()->getUnitVector(X) * -1;
+	directionY = manager.getCannon()->getUnitVector(Y) * -1;
 }
 
 Cannonball::~Cannonball()
@@ -28,13 +30,13 @@ Cannonball::~Cannonball()
 
 void Cannonball::Update(RECT rectView)
 {
-    //if (this->point.x > rectView.right || this->point.x < rectView.left
-    //    || this->point.y > rectView.bottom || this->point.y < rectView.top)
-    //{
-    //    
-    //}
-    this->point.x += directionX * this->speed;
-    this->point.y += directionY * this->speed;
+	if (this->point.x > rectView.right || this->point.x < rectView.left
+		|| this->point.y > rectView.bottom || this->point.y < rectView.top)
+	{
+		setDeactive();
+	}
+	this->point.x += directionX * this->speed;
+	this->point.y += directionY * this->speed;
 }
 
 void Cannonball::Draw(HDC hdc)

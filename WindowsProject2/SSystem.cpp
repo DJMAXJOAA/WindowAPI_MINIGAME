@@ -1,17 +1,21 @@
 #include "SSystem.h"
 
-SSystem::SSystem()
+void SystemManager::setCannon()
 {
-	list.clear();
-	score = 0;
+	cannon = new Cannon();
 }
 
-SSystem::~SSystem()
+Cannon* SystemManager::getCannon()
 {
-	
+	return cannon;
 }
 
-void SSystem::ObjectNew(int type, SSystem &manager)
+std::vector<CObject*> SystemManager::getObj()
+{
+	return list;
+}
+
+void SystemManager::ObjectNew(int type)
 {
 	CObject* temp;
 
@@ -21,7 +25,7 @@ void SSystem::ObjectNew(int type, SSystem &manager)
 		temp = new Block();
 		break;
 	case CANNONBALL:
-		temp = new Cannonball(manager);
+		temp = new Cannonball();
 		break;
 	case OBSTACLE:
 		temp = new Obstacle();
@@ -29,9 +33,24 @@ void SSystem::ObjectNew(int type, SSystem &manager)
 	}
 
 	list.push_back(temp);
+
+	return;
 }
 
-void SSystem::ObjectDelete(int index)
+void SystemManager::ObjectDelete()
 {
-	list.erase(list.begin() + index);
+	std::vector<CObject*> temp;
+	for (int i = 0; i < list.size(); i++)
+	{
+		if (list[i]->getActive() == false)
+		{
+			delete list[i];
+		}
+		else
+		{
+			temp.push_back(list[i]);
+		}
+	}
+	list = temp;
+	wprintf(TEXT("cannon ball count : %d\n"), list.size());
 }

@@ -23,4 +23,3 @@ private:
 	float attack_cycle;
 	bool can_attack;
 };
-

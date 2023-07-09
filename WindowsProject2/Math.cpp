@@ -11,7 +11,7 @@ Math::~Math()
 POINT Math::ChangeVector(POINT p)
 {
 	POINT temp;
-	temp.x = WIDTH2/2 - p.x;
+	temp.x = WIDTH2 / 2 - p.x;
 	temp.y = HEIGHT2 - p.y;
 	return temp;
 }

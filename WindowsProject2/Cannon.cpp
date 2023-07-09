@@ -1,19 +1,17 @@
 #include "Cannon.h"
 #include "Math.h"
 
-Math cal_a;
-
 Cannon::Cannon()
 {
 	point.x = WIDTH2 / 2;
 	point.y = HEIGHT2;
 	length = LENGTH;
-	angle = 0;  
+	angle = 0;
 
-	vertex[0] = { - length * 2, - length / 4 };
-	vertex[1] = { - length * 2, + length / 4 };
-	vertex[2] = { 1, + length / 4 };
-	vertex[3] = { 1, - length / 4 };
+	vertex[0] = { -length * 2, -length / 4 };
+	vertex[1] = { -length * 2, +length / 4 };
+	vertex[2] = { 1, +length / 4 };
+	vertex[3] = { 1, -length / 4 };
 	directionX = 0;
 	directionY = 0;
 
@@ -27,10 +25,12 @@ Cannon::~Cannon()
 
 void Cannon::Update(POINT cur_point)
 {
+	Math& calculator = Math::getInstance();
+
 	POINT temp = { 1, 0 };
-	angle = cal_a.Angle(temp, cur_point);
-	directionX = cal_a.Normalize(cal_a.ChangeVector(cur_point), X);
-	directionY = cal_a.Normalize(cal_a.ChangeVector(cur_point), Y);
+	angle = calculator.Angle(temp, cur_point);
+	directionX = calculator.Normalize(calculator.ChangeVector(cur_point), X);
+	directionY = calculator.Normalize(calculator.ChangeVector(cur_point), Y);
 }
 
 void Cannon::Draw(HDC hdc)
@@ -42,7 +42,7 @@ void Cannon::Draw(HDC hdc)
 		temp[i].x = point.x + (vertex[i].x * cosf(angle2) - vertex[i].y * sinf(angle2));
 		temp[i].y = point.y + (vertex[i].x * sinf(angle2) + vertex[i].y * cosf(angle2));
 	}
-	wprintf(TEXT("%f, %f, %f\n"), angle, directionX, directionY);
+	/*wprintf(TEXT("%f, %f, %f\n"), angle, directionX, directionY);*/
 	Polygon(hdc, temp, 4);
 	Ellipse(hdc, point.x - length, point.y - length, point.x + length, point.y + length);
 }
@@ -75,6 +75,6 @@ POINT Cannon::getAttackPos()
 
 	temp.x = point.x + (vertex[0].x * cosf(angle2) - 1 * sinf(angle2));
 	temp.y = point.y + (vertex[0].x * sinf(angle2) + 1 * cosf(angle2));
-	
+
 	return temp;
 }

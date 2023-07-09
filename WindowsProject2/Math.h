@@ -3,9 +3,15 @@
 
 class Math
 {
-public:
+private:
 	Math();
 	~Math();
+public:
+	static Math& getInstance()
+	{
+		static Math* instance = new Math();
+		return *instance;
+	}
 
 	POINT ChangeVector(POINT p);
 	float Dot(POINT p1, POINT p2);

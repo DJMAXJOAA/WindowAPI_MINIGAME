@@ -8,7 +8,6 @@ class Block : public CObject
 public:
 	Block() : CObject(0, 0, BLOCK, LENGTH) {
 		health = 3;
-		dead = false;
 	};
 	~Block();
 	void Update(RECT rectView) override;
@@ -16,16 +15,14 @@ public:
 
 private:
 	int health;
-	bool dead;
 };
-
 
 /* Æ÷Åº */
 /* Æ÷Åº */
 class Cannonball : public CObject
 {
 public:
-	Cannonball(SSystem manager);
+	Cannonball();
 	~Cannonball();
 	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
@@ -35,7 +32,6 @@ private:
 	float directionX;
 	float directionY;
 };
-
 
 /* Àå¾Ö¹° */
 /* Àå¾Ö¹° */
@@ -55,4 +51,3 @@ private:
 	float speed;
 	float angle;
 };
-
