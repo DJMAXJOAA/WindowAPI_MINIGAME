@@ -14,6 +14,7 @@ public:
 	}
 
 	POINT ChangeVector(POINT p);
+	float Random(float min, float max);
 	float Dot(POINT p1, POINT p2);
 	float Length(POINT p);
 	float Angle(POINT p1, POINT p2);

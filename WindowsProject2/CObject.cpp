@@ -40,6 +40,16 @@ bool CObject::getActive()
 	return active;
 }
 
+int CObject::getType()
+{
+	return type;
+}
+
+int CObject::getLength()
+{
+	return length;
+}
+
 void CObject::setCollide(bool TF)
 {
 	if (TF == TRUE)
@@ -50,5 +60,12 @@ void CObject::setCollide(bool TF)
 
 void CObject::setDeactive()
 {
+	length = 0;
 	active = false;
+}
+
+void CObject::setColor(int R, int G, int B)
+{
+	color = RGB(R, G, B);
+	hBrush = CreateSolidBrush(color);
 }

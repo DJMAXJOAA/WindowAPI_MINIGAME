@@ -16,6 +16,21 @@ POINT Math::ChangeVector(POINT p)
 	return temp;
 }
 
+float Math::Random(float min, float max)
+{
+	std::random_device rand;
+	std::mt19937_64 random(rand());
+	std::uniform_real_distribution<float> dist1(min, max);
+
+	float temp = 0;
+	while (!temp)
+	{
+		temp = dist1(random);
+	}
+
+	return temp;
+}
+
 float Math::Dot(POINT p1, POINT p2)
 {
 	return p1.x * p2.x + p1.y * p2.y;

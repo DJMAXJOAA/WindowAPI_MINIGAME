@@ -27,15 +27,19 @@
 #define PI 3.14159
 #define RAD_TO_ANGLE (180.0/PI);
 #define ANGLE_TO_RAD (PI/180);
-#define LENGTH 100
+#define LENGTH 70
 
 #define X 0
 #define Y 1
 
+#define timer_1 11
+#define timer_2 12
+
 //#define WIDTH 1024
 //#define HEIGHT 768
-#define WIDTH 1002
-#define HEIGHT 1022
+#define WIDTH 1280
+#define HEIGHT 720
 
 #define WIDTH2 (WIDTH-2)
 #define HEIGHT2 (HEIGHT-22)
+#define SCORE 10

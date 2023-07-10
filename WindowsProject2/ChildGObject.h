@@ -6,12 +6,18 @@
 class Block : public CObject
 {
 public:
-	Block() : CObject(0, 0, BLOCK, LENGTH) {
+	Block(int x, int y) : CObject(0, 0, BLOCK, LENGTH) {
+		point.x = x;
+		point.y = y;
 		health = 3;
+		color = RGB(153, 153, 0);
+		hBrush = CreateSolidBrush(color);
 	};
 	~Block();
 	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
+	void getDamaged(int damage);
+	int getHealth();
 
 private:
 	int health;
@@ -38,16 +44,13 @@ private:
 class Obstacle : public CObject
 {
 public:
-	Obstacle() : CObject(RandomPt(), 0, OBSTACLE, LENGTH) {
-		speed = 10;
-		angle = 1;
-	};
+	Obstacle();
 	~Obstacle();
-	int RandomPt();
 	void Update(RECT rectView) override;
 	void Draw(HDC hdc) override;
 
 private:
+	float directionX;
+	float directionY;
 	float speed;
-	float angle;
 };

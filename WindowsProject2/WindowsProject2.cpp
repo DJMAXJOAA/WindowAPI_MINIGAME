@@ -18,6 +18,8 @@ HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
 
+int spawn_interval = 150; // 시작 1.5초 -> 0.1초
+
 SystemManager& manager = SystemManager::getInstance(); // 레퍼런스로 싱글톤
 Math& calculator = Math::getInstance(); // 포인터로 싱글톤
 RECT rectView;
@@ -107,7 +109,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
 	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_POPUPWINDOW,
-		1200, 300, WIDTH, HEIGHT, nullptr, nullptr, hInstance, nullptr);
+		500, 100, WIDTH, HEIGHT, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hWnd)
 	{
@@ -132,46 +134,91 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-#define timer_1 11
+	static POINT cur_point;
+	static int interval;
+	static TCHAR str[100];
+	static int state;
+
 	HDC hdc;
 	PAINTSTRUCT ps;
 
-	static POINT cur_point;
-
-	TCHAR info1[100]; // 마우스 위치
+	static POINT p1;
+	static POINT p2;
+	static RECT rt;
 
 	switch (message)
 	{
 	case WM_CREATE:
 	{
+		state = 1;
+		interval = 3;
 		manager.setCannon();
+		int block_number = WIDTH2 / (LENGTH * 2) + 1;
+		int block_interval = (WIDTH2 % (LENGTH * 2)) / block_number;
+		for (int i = 0; i < block_number; i++)
+		{
+			manager.ObjectNew(BLOCK, i * LENGTH * 2 + block_interval, HEIGHT - LENGTH);
+		}
 		cur_point.x = 0;
 		cur_point.y = 0;
 
 		GetClientRect(hWnd, &rectView);
-		SetTimer(hWnd, timer_1, 30, NULL);
+
+		p1 = { rectView.left + 500, rectView.top + 100 };
+		p2 = { rectView.right + 500, rectView.bottom + 100 };
+
+		rt = { rectView.left + 500 , rectView.top + 100, rectView.right + 500, rectView.bottom + 100 };
+		ClientToScreen(hWnd, &p1);
+		ClientToScreen(hWnd, &p2);
+		ClipCursor(&rt);
+
+		SetTimer(hWnd, timer_1, 24, NULL);
+		SetTimer(hWnd, timer_2, spawn_interval, SpawnObstacle);
 
 		break;
 	}
 	case WM_TIMER:
 	{
-		for (int i = 0; i < manager.getObj().size(); i++)
+		if (wParam == timer_1)
 		{
-			manager.getObj()[i]->Update(rectView);
-		}
-		manager.getCannon()->Update(cur_point);
-		manager.ObjectDelete();
+			if (manager.getLife() == 0)
+			{
+				state = 0;
+				break;
+			}
+			for (int i = 0; i < manager.getObj().size(); i++)
+			{
+				manager.getObj()[i]->Update(rectView);
+			}
+			manager.getCannon()->Update(cur_point);
+			manager.ObjectDelete();
 
-		InvalidateRgn(hWnd, NULL, FALSE);
+			if (spawn_interval > 100)
+			{
+				interval--;
+				if (interval == 0)
+				{
+					spawn_interval--;
+					interval = 2;
+				}
+			}
+			printf("%d\n", spawn_interval);
+			InvalidateRgn(hWnd, NULL, FALSE);
+		}
 		break;
 	}
 	case WM_LBUTTONDOWN:
 	{
+		ClientToScreen(hWnd, &p1);
+		ClientToScreen(hWnd, &p2);
+		ClipCursor(&rt);
+
 		cur_point.x = LOWORD(lParam);
 		cur_point.y = HIWORD(lParam);
-		manager.ObjectNew(CANNONBALL);
-
-		InvalidateRgn(hWnd, NULL, FALSE);
+		if (manager.getCannon()->CanItAttack() == true)
+		{
+			manager.ObjectNew(CANNONBALL);
+		}
 
 		break;
 	}
@@ -179,12 +226,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		cur_point.x = LOWORD(lParam);
 		cur_point.y = HIWORD(lParam);
-
-		wsprintf(info1, TEXT("%d , %d"), cur_point.x, cur_point.y);
-		hdc = GetDC(hWnd);
-		TextOut(hdc, 0, 0, info1, _tcslen(info1));
-		ReleaseDC(hWnd, hdc);
-
 		break;
 	}
 	case WM_COMMAND:
@@ -207,28 +248,55 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 	{
 		PAINTSTRUCT ps;
+
 		HDC hdc = BeginPaint(hWnd, &ps);
 
-		GetClientRect(hWnd, &rectView);
-		HDC MemDC1 = GetDC(hWnd);
-		HDC MemDC2 = CreateCompatibleDC(MemDC1);
-		HBITMAP BackBit1 = CreateCompatibleBitmap(MemDC1, rectView.right, rectView.bottom);
+		HDC MemDC2 = CreateCompatibleDC(hdc);
+		HBITMAP BackBit1 = CreateCompatibleBitmap(hdc, rectView.right, rectView.bottom);
 		HBITMAP BackBit2 = (HBITMAP)SelectObject(MemDC2, BackBit1);
 		FillRect(MemDC2, &rectView, (HBRUSH)GetSysColor(COLOR_BACKGROUND));
 		// TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
 
-		for (int i = 0; i < manager.getObj().size(); i++)
+		wsprintf(str, TEXT("Score : %d"), manager.getScore());
+		TextOut(MemDC2, 100, 100, str, _tcslen(str));
+		wsprintf(str, TEXT("Life : %d"), manager.getLife());
+		TextOut(MemDC2, 100, 120, str, _tcslen(str));
+		wsprintf(str, TEXT("Bullet : %d"), 3 - manager.getCannonballNum());
+		TextOut(MemDC2, 100, 140, str, _tcslen(str));
+
+		if (state == 1)
 		{
-			manager.getObj()[i]->Draw(MemDC2);
+			for (int i = 0; i < manager.getObj().size(); i++)
+			{
+				if (manager.getObj()[i]->getActive() == false)
+					continue;
+
+				if (manager.getObj()[i]->getType() == OBSTACLE)
+				{
+					manager.getObj()[i]->Draw(MemDC2);
+					continue;
+				}
+
+				if (manager.getObj()[i]->getType() == CANNONBALL)
+				{
+					manager.getObj()[i]->Draw(MemDC2);
+					continue;
+				}
+
+				if (manager.getObj()[i]->getType() == BLOCK)
+				{
+					manager.getObj()[i]->Draw(MemDC2);
+					continue;
+				}
+			}
+			manager.getCannon()->Draw(MemDC2);
 		}
-		manager.getCannon()->Draw(MemDC2);
 
 		// 여기까지 ~~
-		BitBlt(MemDC1, 0, 0, rectView.right, rectView.bottom, MemDC2, 0, 0, SRCCOPY);
+		BitBlt(hdc, 0, 0, rectView.right, rectView.bottom, MemDC2, 0, 0, SRCCOPY);
 		SelectObject(MemDC2, BackBit2);
-		DeleteDC(MemDC2);
 		DeleteObject(BackBit1);
-		ReleaseDC(hWnd, hdc);
+		DeleteDC(MemDC2);
 
 		EndPaint(hWnd, &ps);
 		break;
@@ -240,6 +308,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			delete manager.getObj()[i];
 		}
 		KillTimer(hWnd, timer_1);
+		KillTimer(hWnd, timer_2);
 		PostQuitMessage(0);
 		break;
 	default:
@@ -266,4 +335,10 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+VOID CALLBACK SpawnObstacle(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+	manager.ObjectNew(OBSTACLE);
+	SetTimer(hWnd, timer_2, spawn_interval, SpawnObstacle);
 }

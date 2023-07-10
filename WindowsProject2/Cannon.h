@@ -22,4 +22,6 @@ private:
 	int length;
 	float attack_cycle;
 	bool can_attack;
+	COLORREF color;
+	HBRUSH hBrush;
 };

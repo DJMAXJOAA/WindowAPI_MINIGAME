@@ -6,3 +6,5 @@
 #include "ChildGObject.h"
 #include "CObject.h"
 #include "Math.h"
+
+VOID CALLBACK SpawnObstacle(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime);

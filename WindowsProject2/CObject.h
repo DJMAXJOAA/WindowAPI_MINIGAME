@@ -16,8 +16,11 @@ public:
 	POINT getPoint();
 	bool getCollide(CObject& x);
 	bool getActive();
+	int getType();
+	int getLength();
 	void setCollide(bool TF);
 	void setDeactive();
+	void setColor(int R, int G, int B);
 	virtual void Update(RECT rectView) = 0;
 	virtual void Draw(HDC hdc) = 0;
 
@@ -28,4 +31,6 @@ protected:
 	int length;
 	int index;
 	bool active;
+	COLORREF color;
+	HBRUSH hBrush;
 };

@@ -1,4 +1,5 @@
 #include "Cannon.h"
+#include "SSystem.h"
 #include "Math.h"
 
 Cannon::Cannon()
@@ -17,6 +18,9 @@ Cannon::Cannon()
 
 	attack_cycle = 2;
 	can_attack = true;
+
+	color = RGB(204, 204, 204);
+	hBrush = CreateSolidBrush(color);
 }
 
 Cannon::~Cannon()
@@ -35,6 +39,10 @@ void Cannon::Update(POINT cur_point)
 
 void Cannon::Draw(HDC hdc)
 {
+	HBRUSH oldBrush;
+
+	oldBrush = (HBRUSH)SelectObject(hdc, this->hBrush);
+
 	float angle2 = angle * ANGLE_TO_RAD;
 	POINT temp[4];
 	for (int i = 0; i < 4; i++)
@@ -42,14 +50,22 @@ void Cannon::Draw(HDC hdc)
 		temp[i].x = point.x + (vertex[i].x * cosf(angle2) - vertex[i].y * sinf(angle2));
 		temp[i].y = point.y + (vertex[i].x * sinf(angle2) + vertex[i].y * cosf(angle2));
 	}
-	/*wprintf(TEXT("%f, %f, %f\n"), angle, directionX, directionY);*/
 	Polygon(hdc, temp, 4);
+
+	oldBrush = (HBRUSH)SelectObject(hdc, this->hBrush);
 	Ellipse(hdc, point.x - length, point.y - length, point.x + length, point.y + length);
+
+	SelectObject(hdc, oldBrush);
+	DeleteObject(oldBrush);
 }
 
 bool Cannon::CanItAttack()
 {
-	return false;
+	SystemManager& manager = SystemManager::getInstance();
+
+	if (manager.getCannonballNum() >= 3)
+		return false;
+	return true;
 }
 
 void Cannon::setAttack()

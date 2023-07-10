@@ -6,6 +6,8 @@ class SystemManager
 {
 private:
 	SystemManager() {
+		life = 0;
+		cannonball_number = 0;
 		list.clear();
 		cannon = nullptr;
 		score = 0;
@@ -14,7 +16,9 @@ private:
 	SystemManager& operator=(const SystemManager& ref) {}
 	~SystemManager() {}
 
+	int life;
 	int score;
+	int cannonball_number;
 	std::vector<CObject*> list;
 	Cannon* cannon;
 public:
@@ -24,9 +28,15 @@ public:
 		return manager;
 	}
 
-	void setCannon();
-	Cannon* getCannon();
 	std::vector<CObject*> getObj();
-	void ObjectNew(int type);
+	Cannon* getCannon();
+	int getCannonballNum();
+	int getScore();
+	int getLife();
+	void reduceLife();
+	void setCannon();
+	void setCannonballNum(int x);
+	void setScore(int score);
+	void ObjectNew(int type, int x = 0, int y = 0);
 	void ObjectDelete();
 };

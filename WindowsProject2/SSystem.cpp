@@ -1,8 +1,42 @@
 #include "SSystem.h"
 
+int SystemManager::getCannonballNum()
+{
+	return cannonball_number;
+}
+
+int SystemManager::getScore()
+{
+	return score;
+}
+
+int SystemManager::getLife()
+{
+	return life;
+}
+
+void SystemManager::reduceLife()
+{
+	if (life > 0)
+	{
+		life--;
+	}
+}
+
 void SystemManager::setCannon()
 {
 	cannon = new Cannon();
+}
+
+void SystemManager::setCannonballNum(int x)
+{
+	cannonball_number += x;
+}
+
+void SystemManager::setScore(int score)
+{
+	this->score += score;
+	printf("%d\n", this->score);
 }
 
 Cannon* SystemManager::getCannon()
@@ -15,14 +49,15 @@ std::vector<CObject*> SystemManager::getObj()
 	return list;
 }
 
-void SystemManager::ObjectNew(int type)
+void SystemManager::ObjectNew(int type, int x, int y)
 {
-	CObject* temp;
+	CObject* temp = nullptr;
 
 	switch (type)
 	{
 	case BLOCK:
-		temp = new Block();
+		temp = new Block(x, y);
+		life++;
 		break;
 	case CANNONBALL:
 		temp = new Cannonball();
@@ -32,25 +67,25 @@ void SystemManager::ObjectNew(int type)
 		break;
 	}
 
-	list.push_back(temp);
+	if (temp != nullptr)
+	{
+		list.push_back(temp);
+	}
 
 	return;
 }
 
 void SystemManager::ObjectDelete()
 {
-	std::vector<CObject*> temp;
-	for (int i = 0; i < list.size(); i++)
+	std::vector<CObject*>::iterator it;
+
+	for (it = list.begin(); it != list.end(); it++)
 	{
-		if (list[i]->getActive() == false)
+		if ((*it)->getActive() == false)
 		{
-			delete list[i];
-		}
-		else
-		{
-			temp.push_back(list[i]);
+			list.erase(it);
+			break;
 		}
 	}
-	list = temp;
-	wprintf(TEXT("cannon ball count : %d\n"), list.size());
+	return;
 }
