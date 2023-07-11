@@ -45,7 +45,7 @@
   <Class Name="SystemManager">
     <Position X="9.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAgAAgIAACAAAQAIIAAAAAgBACASAAAAggAgBgAA=</HashCode>
+      <HashCode>AAEAAgAAgIAACAAAQAIIAAAAAgBACASACAAggAgBgAA=</HashCode>
       <FileName>SSystem.h</FileName>
     </TypeIdentifier>
   </Class>
